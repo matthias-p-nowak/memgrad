@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "memgrad"
 version = "0.1.0"
@@ -5,6 +9,14 @@ description = "Memory based gradient method"
 readme = "README.md"
 dependencies = [
     "numpy>=2.3.3", 
+    "ufmt>=2.8.0",
     ]
 
-# pip install .
+[project.optional-dependencies]
+dev = ["pytest", "ufmt"]
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# pip install -e .

@@ -1,9 +1,9 @@
 
 format:
-    ufmt format src tests
+    ufmt format memgrad tests
 
 test:
-    pytest 
+    .venv/bin/pytest 
 
 venv:
     python -m venv .venv

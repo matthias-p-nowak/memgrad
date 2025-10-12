@@ -1,8 +1,8 @@
 import logging
 
 
-def main():
-    logging.info("Hello world")
+def main(): ...
+
 
 def greet(name: str) -> str:
     return f"Hello, {name}!"

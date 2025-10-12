@@ -9,6 +9,7 @@ description = "Memory based gradient method"
 readme = "README.md"
 dependencies = [
     "numpy>=2.3.3", 
+    "scipy>=1.16.1",
     "ufmt>=2.8.0",
     ]
 

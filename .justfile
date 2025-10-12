@@ -12,4 +12,4 @@ build:
     python -m build 
 
 clean:
-    rm -frv dist **/*egg-info .pytest_cache
+    rm -frv dist **/*egg-info .pytest_cache **/__pycache__ *.egg-info

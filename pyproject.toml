@@ -1,0 +1,10 @@
+[project]
+name = "memgrad"
+version = "0.1.0"
+description = "Memory based gradient method"
+readme = "README.md"
+dependencies = [
+    "numpy>=2.3.3", 
+    ]
+
+# pip install .

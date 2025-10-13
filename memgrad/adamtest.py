@@ -13,6 +13,8 @@ class Adam:
         self.v = np.zeros_like(x0)
         self.path = [x0.copy()]
         self.obs = []
+        self.vh=[]
+        self.mh=[]
 
 
     def step(self, t):
@@ -27,6 +29,8 @@ class Adam:
         v_hat = self.v / (1 - self.beta2 ** t)
         x_new = x - self.alpha * m_hat / (np.sqrt(v_hat) + self.epsilon)
         self.path.append(x_new)
+        self.vh.append(np.linalg.norm(v_hat))
+        self.mh.append(np.linalg.norm(m_hat))
 
     def iterate(self, max_iter=100):
         for t in range(1,max_iter+1):
@@ -34,4 +38,4 @@ class Adam:
             l=np.linalg.norm(self.path[-1])
             if l>20:
                 break
-        return [np.array(self.obs), np.array(self.path)]
+        return [np.array(self.obs), np.array(self.path),np.array(self.vh), np.array(self.mh)]

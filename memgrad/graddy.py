@@ -109,7 +109,7 @@ def MemGrad():
 
 def AdamTest():
     fig1=prepPlot()
-    a= adamtest.Adam(rosenbrock, grad_rosenbrock, x0.copy(), 0.3, 0.9, 0.99, 1e-8)
+    a= adamtest.Adam(rosenbrock, grad_rosenbrock, x0.copy(), 0.9, 0.9, 0.99, 1e-8)
     obs, path=a.iterate(1000)
     plt.plot(path[:, 0], path[:, 1], "r.-", label="calculated")
     plt.legend()

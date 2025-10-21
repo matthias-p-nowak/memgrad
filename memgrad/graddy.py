@@ -1,10 +1,13 @@
 import adambash
+
+import adamtest
 import matplotlib.pyplot as plt
 import memgradstep
+import mommem
 import numpy as np
 from scipy.integrate import RK45
 
-import adamtest
+import mommem2
 
 
 # Rosenbrock function
@@ -36,7 +39,7 @@ def steepest_descent(f_grad, x0, lr=0.001, max_iter=100, tol=1e-6):
     return np.array(path)
 
 
-x0 = np.array([-1, 2])
+x0 = np.array([-1.0, 2.0])
 
 
 def prepPlot():
@@ -45,7 +48,7 @@ def prepPlot():
     y = np.linspace(-1, 3, 400)
     X, Y = np.meshgrid(x, y)
     Z = rosenbrock(X, Y)
-    fig=plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(10, 6))
     levels = np.array([i**2 for i in range(20)])
     plt.contour(X, Y, Z, levels=levels, cmap="rainbow")
     plt.plot(1, 1, "bo", label="Minimum (1,1)")
@@ -61,7 +64,7 @@ def prepPlot():
 def Steepest():
     prepPlot()
     # Initial point and optimization
-    path = steepest_descent(grad_rosenbrock, x0, lr=0.0019, max_iter=250)
+    path = steepest_descent(grad_rosenbrock, x0, lr=0.0019, max_iter=500)
     plt.plot(path[:, 0], path[:, 1], "r.-", label="Steepest Descent Path")
     plt.show()
 
@@ -72,7 +75,7 @@ def gradFlow(t, xy):
 
 
 def RKLpath(max_iter=10):
-    rk45 = RK45(gradFlow, 0, x0.copy(), 10, max_step=20000)
+    rk45 = RK45(gradFlow, 0, x0.copy(), 20, max_step=20000)
     path = [x0.copy()]
     for s in range(max_iter):
         rk45.step()
@@ -107,25 +110,26 @@ def MemGrad():
     plt.title("MemGradStep,1000 iterations")
     plt.show()
 
+
 def AdamTest():
-    fig1=prepPlot()
-    a= adamtest.Adam(rosenbrock, grad_rosenbrock, x0.copy(), 0.3  , 0.9, 0.99, 1e-8)
-    obs, path,vh,mh=a.iterate(1000)
+    fig1 = prepPlot()
+    a = adamtest.Adam(rosenbrock, grad_rosenbrock, x0.copy(), 0.3, 0.9, 0.99, 1e-8)
+    obs, path, vh, mh = a.iterate(1000)
     plt.plot(path[:, 0], path[:, 1], "r.-", label="calculated")
     plt.legend()
     plt.title("Adam, 1000 iterations")
-    fig2=plt.figure(figsize=(10, 6))
-    plt.plot( obs[:, 0], "r.-", label="objective")
-    plt.plot(obs[:, 1], "b.-", label="gradient")  
+    fig2 = plt.figure(figsize=(10, 6))
+    plt.plot(obs[:, 0], "r.-", label="objective")
+    plt.plot(obs[:, 1], "b.-", label="gradient")
     # plt.legend()
     plt2 = plt.twinx()
-    plt2.plot( obs[:, 2], "g.", label="side") 
-    plt2.plot( path[:, 0], "m.", label="x")
-    plt2.plot( path[:, 1], "c.", label="y")
+    plt2.plot(obs[:, 2], "g.", label="side")
+    plt2.plot(path[:, 0], "m.", label="x")
+    plt2.plot(path[:, 1], "c.", label="y")
     plt2.legend()
     plt2.grid(True)
     plt.title("Adam, 1000 iterations")
-    fig3=plt.figure(figsize=(10, 6))
+    fig3 = plt.figure(figsize=(10, 6))
     # plt.plot(vh, "r.-", label="vh")
     plt.plot(mh, "b.-", label="mh")
     plt.legend()
@@ -133,8 +137,47 @@ def AdamTest():
     plt.show(block=True)
 
 
+def MomMemTest():
+    fig1 = prepPlot()
+    mms = mommem.MomMem(
+        rosenbrock, grad_rosenbrock, x0, decay=0.1, memory=20, momentum=0.95
+    )
+    path, obs = mms.iterate(1000)
+    plt.plot(path[:, 0], path[:, 1], "r.-", label="calculated")
+    plt.legend()
+    plt.title("MomMem,1000 iterations")
+    fig2 = plt.figure(figsize=(10, 6))
+    plt.semilogy(obs[:, 0], "g.-", label="objective")
+    plt.semilogy(obs[:, 1], "r.-", label="gradn")
+    plt.semilogy(obs[:, 2], "b.-", label="stepsize")
+    plt.legend()
+    plt.show()
+
+def MomMem2Test():
+    fig1 = prepPlot()
+    mms = mommem2.MomMem2(rosenbrock, grad_rosenbrock, x0)
+    path, obs = mms.iterate(300)
+    plt.plot(path[:, 0], path[:, 1], "b.-", label="calculated")
+    plt.legend()
+    plt.title("MomMem2, 1000 iterations")
+    fig2 = plt.figure(figsize=(10, 6))
+    plt.semilogy(obs[:, 0], "g.-", label="objective")
+    plt.semilogy(obs[:, 1], "r.-", label="gradn")
+    plt.semilogy(obs[:, 2], "b.-", label="stepsize")
+    plt.legend()
+    plt.title("MomMem2, values")
+    plt.twinx()
+    plt.plot(obs[:, 3], "m.-", label="beta")
+    plt.show()
+
+
 if __name__ == "__main__":
+    Steepest()
+    # RungeKutta()
+    # AdamBash()
     # MemGrad()
-    AdamTest()
+    # AdamTest()
+    # MomMemTest()
+    # MomMem2Test()
     plt.show(block=True)
     print("all done")

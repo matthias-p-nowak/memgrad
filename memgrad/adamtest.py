@@ -13,29 +13,33 @@ class Adam:
         self.v = np.zeros_like(x0)
         self.path = [x0.copy()]
         self.obs = []
-        self.vh=[]
-        self.mh=[]
-
+        self.vh = []
+        self.mh = []
 
     def step(self, t):
         x = self.path[-1]
         f = self.f(x[0], x[1])
         g = self.g(x)
-        self.obs.append([f, np.linalg.norm(g), x[1]-x[0]**2] )
+        self.obs.append([f, np.linalg.norm(g), x[1] - x[0] ** 2])
         self.m = self.beta1 * self.m + (1 - self.beta1) * g
-        self.v = self.beta2 * self.v + (1 - self.beta2) * (g ** 2)
+        self.v = self.beta2 * self.v + (1 - self.beta2) * (g**2)
         # Bias-corrected estimates
-        m_hat = self.m / (1 - self.beta1 ** t)
-        v_hat = self.v / (1 - self.beta2 ** t)
+        m_hat = self.m / (1 - self.beta1**t)
+        v_hat = self.v / (1 - self.beta2**t)
         x_new = x - self.alpha * m_hat / (np.sqrt(v_hat) + self.epsilon)
         self.path.append(x_new)
         self.vh.append(np.linalg.norm(v_hat))
         self.mh.append(np.linalg.norm(m_hat))
 
     def iterate(self, max_iter=100):
-        for t in range(1,max_iter+1):
+        for t in range(1, max_iter + 1):
             self.step(t)
-            l=np.linalg.norm(self.path[-1])
-            if l>20:
+            l = np.linalg.norm(self.path[-1])
+            if l > 20:
                 break
-        return [np.array(self.obs), np.array(self.path),np.array(self.vh), np.array(self.mh)]
+        return [
+            np.array(self.obs),
+            np.array(self.path),
+            np.array(self.vh),
+            np.array(self.mh),
+        ]

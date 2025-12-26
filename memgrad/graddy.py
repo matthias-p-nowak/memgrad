@@ -261,7 +261,7 @@ def MemReflTest(iterations=1000):
 
 def ValleyTest(iterations=1000):
     fig1 = prepPlot()
-    mms = valley.Valley(rosenbrock, grad_rosenbrock, x0, memory=20, eva=0.5)
+    mms = valley.Valley(rosenbrock, grad_rosenbrock, x0, memory=10, eva=0.7)
     path, obs, rejected, restarted = mms.iterate(iterations)
     plt.plot(path[:, 0], path[:, 1], "r.-", label="calculated")
     plt.plot(rejected[:, 0], rejected[:, 1], "mo", markersize=5, label="rejected")
